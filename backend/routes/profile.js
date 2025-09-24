@@ -8,7 +8,6 @@ const authMiddleware = require('../middleware/authMiddleware');
 // @access  Privé
 router.get('/me', authMiddleware, async (req, res) => {
   try {
-    // Grâce au middleware, req.user contient l'ID et le rôle de l'utilisateur
     const userProfile = await pool.query(
       'SELECT id, email, role, company_name FROM users WHERE id = $1',
       [req.user.id]
@@ -25,16 +24,12 @@ router.get('/me', authMiddleware, async (req, res) => {
   }
 });
 
-module.exports = router;
-
 // @route   PUT api/profile
 // @desc    Mettre à jour le profil de l'utilisateur (PME)
 // @access  Privé
 router.put('/', authMiddleware, async (req, res) => {
-  // 1. Extraire les données du corps de la requête
   const { company_name, company_details, bank_details } = req.body;
 
-  // 2. Construire l'objet de mise à jour
   const fieldsToUpdate = {};
   if (company_name) fieldsToUpdate.company_name = company_name;
   if (company_details) fieldsToUpdate.company_details = company_details;
@@ -45,14 +40,13 @@ router.put('/', authMiddleware, async (req, res) => {
   }
 
   try {
-    // 3. Mettre à jour les informations dans la base de données
     const updatedUser = await pool.query(
       'UPDATE users SET company_name = $1, company_details = $2, bank_details = $3 WHERE id = $4 RETURNING *',
       [
         fieldsToUpdate.company_name,
         fieldsToUpdate.company_details,
         fieldsToUpdate.bank_details,
-        req.user.id, // L'ID vient du token JWT via le middleware
+        req.user.id,
       ]
     );
 
@@ -62,3 +56,6 @@ router.put('/', authMiddleware, async (req, res) => {
     res.status(500).send('Erreur du serveur');
   }
 });
+
+// **LA CORRECTION EST ICI** : On déplace cette ligne à la toute fin
+module.exports = router;
