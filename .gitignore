@@ -1,0 +1,14 @@
+# Dépendances
+/node_modules
+/frontend/node_modules
+/backend/node_modules
+
+# Fichiers d'environnement
+.env
+/frontend/.env
+/backend/.env
+
+# Fichiers de log et de build
+npm-debug.log
+/build
+/dist
