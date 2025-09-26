@@ -17,9 +17,12 @@ app.use('/api/auth', authRoutes);
 const profileRoutes = require('./routes/profile');
 app.use('/api/profile', profileRoutes);
 
-// NOUVELLES LIGNES À AJOUTER
 const invoiceRoutes = require('./routes/invoices');
 app.use('/api/invoices', invoiceRoutes);
+
+// *** NOUVELLES LIGNES POUR L'ADMINISTRATEUR ***
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
 
 // Définir le port d'écoute
 const PORT = process.env.PORT || 5001;
